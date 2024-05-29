@@ -88,8 +88,17 @@ form .gender-details .category .g-category{
     background: linear-gradient(135deg,#71b7e6,#9b59b6);
     border: none;
     border-radius: 5px;
-    color: white;
+    color: #fff;
 }
-span{
-    margin: 0 auto;
+.table-title{
+    color: #fff;
+    margin-bottom: 10px;
+}
+.registered-users{
+    margin-left: 400px;
+    margin-bottom: 20px;
+}
+table{
+    border-radius: 5px;
+    background: #fff;
 }

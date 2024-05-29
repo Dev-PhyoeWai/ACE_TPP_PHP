@@ -27,7 +27,7 @@
         }else{
             $name = testInput($_POST["username"]);
             if(!preg_match("/^[a-zA-Z-' ]*$/",$name)){
-                $nameErr = "Only letters and white space allowed";
+                $nameErr = "*Only letters and white space allowed";
             }
         }
         if(empty($_POST["email"])){
@@ -35,7 +35,7 @@
         }else{
             $email = testInput($_POST["email"]);
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-                $emailErr = "Invalid email format";
+                $emailErr = "*Invalid email format";
             }
         }
         if(empty($_POST["gender"])){
@@ -44,12 +44,12 @@
             $gender = testInput($_POST["gender"]);
         }
         if(empty($_POST["website"])){
-            $websiteErr = "* Website is required";
+            $websiteErr = "*Website is required";
         }else{
             $website = testInput($_POST["website"]);
             if(!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",
                 $website)){
-                $websiteErr = "Invalid URL";
+                $websiteErr = "*Invalid URL";
             }
         }
     }
@@ -64,11 +64,9 @@
 
         <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Assuming you have form validation logic here to set error variables
-            // $nameErr, $emailErr, $genderErr, $websiteErr
 
             if(empty($nameErr) && empty($emailErr) && empty($genderErr) && empty($websiteErr)){
-                echo "<h1 style='color: greenyellow; justify-content: center '>Register Successful</h1>";
+                echo "<h1 style='color: greenyellow; text-align: center;margin-top: 20px; '>Register Successful</h1>";
             }
         }
         ?>
@@ -135,10 +133,10 @@
         <!-- Detail info -->
         <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST" && empty($nameErr) && empty($emailErr) && empty($genderErr) && empty($websiteErr)) {
-            echo "<strong>Username => </strong> " . htmlspecialchars($name) . "<br>";
-            echo "<strong>Email =></strong>  " . htmlspecialchars($email) . "<br>";
-            echo "<strong>Website => </strong>" . htmlspecialchars($website) . "<br>";
-            echo "<strong>Gender =></strong>"  . htmlspecialchars($gender) ;
+            echo "<span>Username => " . htmlspecialchars($name) . "<br>" . "</span> ";
+            echo "<span>Email => " . htmlspecialchars($email) . "<br>" . "</span> ";
+            echo "<span> Website => " . htmlspecialchars($website) . "<br>" . "</span> ";
+            echo "<span>Gender => "  . htmlspecialchars($gender) . "</span> " ;
         }
         ?>
 
