@@ -1,8 +1,7 @@
-
 <?php
-// define variables and set to empty values
-$nameErr = $emailErr = $genderErr = $websiteErr = "";
-$name = $email = $gender = $comment = $website = "";
+
+$nameErr = $emailErr = $genderErr = $websiteErr = $imgErr = "";
+$name = $email = $gender = $comment = $website = $fileToUpload = "";
 
 function testInput($data) {
     $data = trim($data);
@@ -11,21 +10,14 @@ function testInput($data) {
     return $data;
 }
 
-//if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//    $name = testInput($_POST['username']);
-//    $email = testInput($_POST['email']);
-//    $website = testInput($_POST['website']);
-//    $comment = testInput($_POST['comment']);
-//    $gender = testInput($_POST['gender']);
-//}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     if (empty($_POST["username"])) {
         $nameErr = "* Username is required";
     } else {
         $name = testInput($_POST["username"]);
         if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
-            $nameErr = "Only letters and white space allowed";
+            $nameErr = "*Only letters and white space allowed";
         }
     }
 
@@ -49,23 +41,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $website = testInput($_POST["website"]);
         if (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $website)) {
-            $websiteErr = "Invalid URL";
+            $websiteErr = "*Invalid URL";
         }
     }
+    # ---------------------------------------------------------------------------
+    # comment check
+    if (!empty($_POST["comment"])) {
+        $comment = testInput($_POST["comment"]);
+    }
+    # ---------------------------------------------------------------------------
+    if (isset($_FILES["fileToUpload"]) && $_FILES["fileToUpload"]["error"] == 0) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // If no errors, save data to file
-        if (empty($nameErr) && empty($emailErr) && empty($genderErr) && empty($websiteErr)) {
-
-            $data = "$name,$email,$website,$comment,$gender\n";
-            file_put_contents('users.txt', $data, FILE_APPEND);
-
-            echo "<h1 style='color: greenyellow; text-align: center; margin-top: 20px;'>Register Successful</h1>";
-
-            $name = $email = $gender = $comment = $website = "";
-
+        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+        if ($check !== false) {
+            if ($_FILES["fileToUpload"]["size"] > 500000) {
+                $imgErr = "*Sorry, your file is too large.";
+                $uploadOk = 0;
+            }
+            if (!in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
+                $imgErr = "*Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+            }
+        } else {
+            $imgErr = "*File is not an image.";
+            $uploadOk = 0;
         }
 
+        if ($uploadOk == 1) {
+            if (!move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                $imgErr = "*Sorry, there was an error uploading your file.";
+            }
+        }
+    } else {
+        $imgErr = "*No file was uploaded.";
     }
+
+    // If no errors, save data to file
+    if (empty($nameErr) && empty($emailErr) && empty($genderErr) && empty($websiteErr) && empty($imgErr)) {
+        $data = "$name,$email,$website,$comment,$gender,$target_file\n";
+        file_put_contents('users.txt', $data, FILE_APPEND);
+
+        echo "<h1 style='color: greenyellow; text-align: center; margin-top: 20px;'>Register Successful</h1>";
+
+        $name = $email = $gender = $comment = $website = $fileToUpload = "";
+    }
+}
 ?>
 
 <html>
@@ -75,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <div class="container">
     <h1>Registration Form</h1>
-    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
+    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
         <div class="user-details">
             <div class="input-box">
                 <span class="details">Name</span>
@@ -120,6 +144,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <span style="color: red"><?php echo $genderErr; ?></span>
                 </div>
             </div>
+            <div class="file-field">
+                <input type="file" name="fileToUpload" id="fileToUpload" />
+                <span style="color: red"><?php echo $imgErr; ?></span>
+            </div>
             <input class="btn" type="submit" value="Register"/>
         </div>
     </form>
@@ -135,18 +163,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <th>Website</th>
             <th>Comment</th>
             <th>Gender</th>
+            <th>Image</th>
         </tr>
         <?php
         if (file_exists('users.txt')) {
-            $file = fopen('users.txt', 'r');
-            while (($user = fgetcsv($file)) !== false) {
+            $files = fopen('users.txt', 'r');
+            while (($user = fgetcsv($files)) !== false) {
                 echo "<tr>";
                 foreach ($user as $field) {
-                    echo "<td>" . htmlspecialchars($field) . "</td>";
+                    if (str_contains($field, "uploads")) {
+                        echo "<td><img width='30px' height='30px' src='" . htmlspecialchars($field) . "' alt='" . htmlspecialchars($field) . "' /></td>";
+                    } else {
+                        echo "<td>" . htmlspecialchars($field) . "</td>";
+                    }
                 }
                 echo "</tr>";
             }
-            fclose($file);
+            fclose($files);
         }
         ?>
     </table>
