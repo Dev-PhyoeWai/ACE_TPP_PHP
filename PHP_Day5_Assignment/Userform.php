@@ -1,24 +1,24 @@
 <?php
 
-$nameErr = $emailErr = $genderErr = $websiteErr = $imgErr = "";
-$name = $email = $gender = $comment = $website = $fileToUpload = "";
+    $nameErr = $emailErr = $genderErr = $websiteErr = $imgErr = "";
+    $name = $email = $gender = $comment = $website = $fileToUpload = "";
 
-function testInput($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
+    function testInput($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    if (empty($_POST["username"])) {
-        $nameErr = "* Username is required";
-    } else {
-        $name = testInput($_POST["username"]);
-        if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
-            $nameErr = "*Only letters and white space allowed";
-        }
+        if (empty($_POST["username"])) {
+            $nameErr = "* Username is required";
+        } else {
+            $name = testInput($_POST["username"]);
+            if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
+                $nameErr = "*Only letters and white space allowed";
+            }
     }
 
     if (empty($_POST["email"])) {
@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     # ---------------------------------------------------------------------------
     if (isset($_FILES["fileToUpload"]) && $_FILES["fileToUpload"]["error"] == 0) {
+
         $target_dir = "uploads/";
         $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
         $uploadOk = 1;
