@@ -1,2 +1,0 @@
-phyoewai,phyoewai2311@gmail.com,http://github.com/,hello,male,uploads/vector.jpg
-mama,mamay@gmail.com,http://mama.net/,Hello World,female,uploads/user.jpg
