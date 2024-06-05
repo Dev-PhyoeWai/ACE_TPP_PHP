@@ -1,1 +1,0 @@
-[{"name":"Battery","price":3400,"description":"Watt 100","weight":300,"image":"uploads\/vector.jpg"},{"name":"Grinder","price":10050,"description":"Power 2000","weight":270,"image":"uploads\/user.jpg"}]
