@@ -1,0 +1,1 @@
+[{"name":"battery","price":400000,"description":"good product","weight":400,"image":"uploads\/unit.jpg"},{"name":"grinder","price":9000,"description":"powerful","weight":500,"image":"uploads\/user.jpg"}]
