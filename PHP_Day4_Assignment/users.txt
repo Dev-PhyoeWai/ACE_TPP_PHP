@@ -1,6 +1,0 @@
-phyoewai,phyoewai2311@gmail.com,http://github.com/,,male
-phyoe,phyoe@gmail.com,http://github.com/,,male
-mama,mamay@gmail.com,http://mama.net/,hello world,female
-Nagazaren,n@gmail.com,http://linkedin.com/,,male
-phyoewai,phyoewai2311@gmail.com,http://github.com/,,male
-phyoewai,phyoewai2311@gmail.com,http://github.com/,,female
